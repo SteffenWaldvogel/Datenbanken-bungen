@@ -148,32 +148,6 @@ $$ LANGUAGE plpgsql;
 
 ---
 
-# 🗂 7. Projektstruktur
-
-```
-baeckerei-db-training/
-├─ README.md
-├─ sql/
-│  ├─ create_bakery_tables.sql
-│  ├─ insert_bakery_tables.sql
-│  ├─ create_users_and_grants.sql
-├─ aufgaben/
-│  ├─ 01_setup_und_check.sql
-│  ├─ 02_select_basic.md
-│  ├─ 03_joins_aggregate.md
-│  ├─ 04_subqueries_views.md
-│  ├─ 05_dml_updates.md
-│  ├─ 06_rechte_und_user.md
-├─ loesungen/
-│  ├─ 02_select_basic_loesungen.sql
-│  ├─ 03_joins_aggregate_loesungen.sql
-│  ├─ 04_subqueries_views_loesungen.sql
-│  ├─ 05_dml_updates_loesungen.sql
-│  ├─ 06_rechte_und_user_loesungen.sql
-```
-
----
-
 # 🎯 Ziel des Projekts
 
 Dieses Projekt soll ermöglichen:
