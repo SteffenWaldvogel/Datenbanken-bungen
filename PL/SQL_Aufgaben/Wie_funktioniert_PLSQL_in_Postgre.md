@@ -128,7 +128,7 @@ Ein paar typische Unterschiede:
 
 Praktisch für dieses Repo heißt das:
 - Alles ist für **PostgreSQL** ausgelegt.
-- Die Syntaxbeispiele aus dem FH-Skript zu PL/SQL sind in die passende **PL/pgSQL-Form** übersetzt.
+- Die Syntaxbeispiele aus dem Vorlesungsskript zu PL/SQL sind in die passende **PL/pgSQL-Form** übersetzt.
 
 ---
 

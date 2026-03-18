@@ -208,7 +208,7 @@ BEGIN
         WHERE produkt_id = v_produkt_id;
 
         RAISE NOTICE
-            'Produkt % (%): Preis von % auf % geändert (Faktor %, % %)',
+            'Produkt % (%): Preis von % auf % geändert (Faktor %, % %%)',
             v_produkt_id, v_name, v_preis_alt, v_preis_neu, v_faktor, p_prozent;
     END LOOP;
 

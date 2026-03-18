@@ -1,22 +1,22 @@
-# 🥐 Bäckerei-Datenbank – PostgreSQL Trainingsprojekt
+# Baeckerei-Datenbank -- PostgreSQL Trainingsprojekt
 
-Dieses Repository stellt eine vollständige Übungsdatenbank zum Thema **Bäckerei** bereit.
+Dieses Repository stellt eine vollstaendige Uebungsdatenbank zum Thema **Baeckerei** bereit.
 Ideal zum Lernen von:
 
 - SQL (SELECT, JOIN, GROUP BY, Views, Subqueries)
 - DML (INSERT, UPDATE, DELETE)
 - Benutzerrechten (`GRANT`, `REVOKE`, `CREATE USER`)
-- prozeduraler SQL-Programmierung in **PL/pgSQL** – sehr ähnlich zu Oracle PL/SQL
+- prozeduraler SQL-Programmierung in **PL/pgSQL** -- sehr aehnlich zu Oracle PL/SQL
 
-Die Datenbank ist bewusst umfangreich gestaltet (18 Tabellen, N:M-Beziehungen, Fremdschlüssel, realistische Daten).
+Die Datenbank ist bewusst umfangreich gestaltet (18 Tabellen, N:M-Beziehungen, Fremdschluessel, realistische Daten).
 
 ---
 
-# 📦 1. Installation
+# 1. Installation
 
 ### Voraussetzungen
 
-- PostgreSQL **15 oder 16**
+- PostgreSQL **15, 16 oder 17**
 - SQL-Client deiner Wahl:
   - pgAdmin 4
   - DBeaver
@@ -34,7 +34,7 @@ Datenbankname: bakery_db
 
 ---
 
-# 🍞 2. Datenbank erstellen
+# 2. Datenbank erstellen
 
 ## 2.1 Datenbank anlegen
 
@@ -50,31 +50,27 @@ Verbinden:
 
 ---
 
-# 📚 3. Schema & Daten importieren
+# 3. Schema & Daten importieren
 
 ## 3.1 Tabellenstruktur importieren
 
 ```sql
-\i sql/create_bakery_tables.sql
+\i Skript_Setups/create_bakery_tables.sql
 ```
 
 ## 3.2 Beispieldaten importieren
 
 ```sql
-\i sql/insert_bakery_tables.sql
+\i Skript_Setups/insert_bakery_tables.sql
 ```
 
-Jetzt stehen alle Daten bereit: Filialen, Mitarbeiter, Kunden, Produkte, Rezepte, Bestellungen, Lieferungen, Backaufträge etc.
+Jetzt stehen alle Daten bereit: Filialen, Mitarbeiter, Kunden, Produkte, Rezepte, Bestellungen, Lieferungen, Backauftraege etc.
 
 ---
 
-# 🔐 4. Benutzer & Rechte
+# 4. Benutzer & Rechte
 
-Ausführen als Superuser:
-
-```sql
-\i sql/create_users_and_grants.sql
-```
+Die Benutzer und Rechte werden am Ende von `create_bakery_tables.sql` automatisch angelegt.
 
 ### Angelegte Benutzer
 
@@ -86,22 +82,42 @@ Ausführen als Superuser:
 
 ---
 
-# 🧪 5. Übungsaufgaben
+# 5. SQL-Uebungsaufgaben
 
-Im Ordner `aufgaben/`:
+Im Ordner `SQL_Aufgaben/`:
 
-- 01_setup_und_check.sql – Überprüfung des Setups
-- 02_select_basic.md – Einfache SELECT-Abfragen
-- 03_joins_aggregate.md – JOINs, GROUP BY, HAVING
-- 04_subqueries_views.md – Subqueries & Views
-- 05_dml_updates.md – INSERT / UPDATE / DELETE
-- 06_rechte_und_user.md – Benutzerrechte
+- `01_select_basics.md` -- Einfache SELECT-Abfragen
+- `02_filter_und_bedingungen.md` -- Filter, Bedingungen, Operatoren
+- `03_einfache_joins.md` -- JOINs (Einsteiger)
+- `04_joins_komplex.md` -- Komplexe JOINs
+- `05_aggregation_groupby.md` -- Aggregation & GROUP BY
+- `06_subqueries.md` -- Subqueries
+- `07_views.md` -- Views
+- `08_dml_insert_update_delete.md` -- INSERT / UPDATE / DELETE
+- `09_set_operationen.md` -- Set-Operationen
+- `10_komplexe_klausuraufgaben.md` -- Komplexe Klausuraufgaben
 
-Lösungen liegen im Ordner `loesungen/`.
+Loesungen liegen im Ordner `SQL_Aufgaben/SQL_Loesungen/`.
 
 ---
 
-# ⚙️ 6. PL/pgSQL kurz erklärt
+# 6. PL/pgSQL-Uebungsaufgaben
+
+Im Ordner `PL/SQL_Aufgaben/`:
+
+- `Wie_funktioniert_PLSQL_in_Postgre.md` -- Einfuehrung in PL/pgSQL
+- `01_funktionen_basic.md` -- Funktionen (Basics)
+- `02_funktionen_businesslogik.md` -- Funktionen mit Businesslogik
+- `03_prozeduren_und_transaktionen.md` -- Prozeduren & Transaktionen
+- `04_trigger_baeckerei_logik.md` -- Trigger
+- `05_fehler_schleifen_cursor.md` -- Fehlerbehandlung, Schleifen, Cursors
+- `06_mini_projekt.md` -- Mini-Projekt: Bestellpruefung & Reporting
+
+Loesungen liegen im Ordner `PL/SQL_Aufgaben/PL/SQL_Loesungen/`.
+
+---
+
+# 7. PL/pgSQL kurz erklaert
 
 Grundstruktur einer Funktion:
 
@@ -123,7 +139,7 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION bakery_ping()
 RETURNS TEXT AS $$
 BEGIN
-    RETURN 'Bäckerei-System läuft.';
+    RETURN 'Baeckerei-System laeuft.';
 END;
 $$ LANGUAGE plpgsql;
 ```
@@ -148,14 +164,14 @@ $$ LANGUAGE plpgsql;
 
 ---
 
-# 🎯 Ziel des Projekts
+# Ziel des Projekts
 
-Dieses Projekt soll ermöglichen:
+Dieses Projekt soll ermoeglichen:
 
-- SQL realistisch zu üben  
-- komplexe Datenmodelle zu verstehen  
-- PL/pgSQL (ähnlich PL/SQL) anzuwenden  
-- Benutzerrechte zu testen  
-- eine vollständige Lernumgebung für Kommiliton*innen aufzubauen  
+- SQL realistisch zu ueben
+- komplexe Datenmodelle zu verstehen
+- PL/pgSQL (aehnlich PL/SQL) anzuwenden
+- Benutzerrechte zu testen
+- eine vollstaendige Lernumgebung fuer Kommiliton*innen aufzubauen
 
 Viel Erfolg beim Lernen!

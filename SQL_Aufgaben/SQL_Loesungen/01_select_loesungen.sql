@@ -78,7 +78,7 @@ WHERE rabatt_prozent = (
 );
 
 -- Aufgabe 15
-SELECT p.produkt_id, p.name, p.standardpreis, k.bezzeichnung
+SELECT p.produkt_id, p.name, p.standardpreis, k.bezeichnung
 FROM produkte p
 JOIN produktkategorien k ON p.kategorie_id = k.kategorie_id
 ORDER BY k.bezeichnung, p.standardpreis DESC, p.name;

@@ -176,17 +176,12 @@ ORDER BY
 -- Aufgabe 10 – Durchschnittlicher Rabatt je Kundentyp
 --------------------------------------------------
 SELECT
-    k.kunden_typ,
-    AVG(bp.rabatt_prozent) AS durchschnitt_rabatt
+    kunden_typ,
+    AVG(rabatt_prozent) AS durchschnitt_rabatt
 FROM
-    kunden k,
-    bestellungen b,
-    bestell_positionen bp
-WHERE
-    k.kunde_id        = b.kunde_id
-    AND b.bestellung_id = bp.bestellung_id
+    kunden
 GROUP BY
-    k.kunden_typ;
+    kunden_typ;
 
 
 --------------------------------------------------

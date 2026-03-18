@@ -13,7 +13,7 @@ Finde alle Produkte mit Kategorien 1, 3 und 4 (IN-Operator).
 Finde alle Mitarbeiter mit Eintrittsdatum vor 2020.
 
 ## Aufgabe 5  
-Finde alle Produkte ohne Kategorie (NULL-Test) — Prüfe, ob es welche gibt.
+Finde alle Produkte ohne Kategorie (NULL-Test) — Hinweis: `kategorie_id` ist NOT NULL, daher sollte das Ergebnis leer sein.
 
 ## Aufgabe 6  
 Zeige alle Kunden, deren Telefonnummer KEINE „015“ enthält.
@@ -37,7 +37,7 @@ Produkte, deren Name ZWISCHEN „A“ und „K“ alphabetisch liegt.
 Kunden, deren Name sowohl ein „a“ als auch ein „e“ enthält.
 
 ## Aufgabe 13  
-Produkte, bei denen der Preis *nicht* angegeben ist (NULL-Proof).
+Produkte, bei denen der Preis *nicht* angegeben ist (NULL-Proof) — Hinweis: `standardpreis` ist NOT NULL, daher sollte das Ergebnis leer sein.
 
 ## Aufgabe 14  
 Mitarbeiter, deren Nachname mit „er“ endet.

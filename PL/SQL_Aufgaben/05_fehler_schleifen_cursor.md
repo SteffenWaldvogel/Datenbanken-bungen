@@ -11,9 +11,7 @@ Schreibe eine Funktion `fn_kunden_umsatz_strikt(k_id INT)`, die:
 - den Gesamtumsatz eines Kunden berechnet (wie vorher),
 - **eine Exception wirft**, falls der Kunde nicht existiert.
 
-Nutze einen `EXCEPTION WHEN NO_DATA_FOUND THEN ...`-Block.
-
-(Hinweis: In PostgreSQL: SELECT INTO + `IF NOT FOUND THEN ...` und `RAISE EXCEPTION`.)
+Nutze `SELECT INTO` + `IF NOT FOUND THEN ... RAISE EXCEPTION ...` (PostgreSQL-Syntax).
 
 ---
 

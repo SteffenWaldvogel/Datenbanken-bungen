@@ -154,7 +154,7 @@ RETURNS TEXT
 AS $$
 DECLARE
     v_name    TEXT;
-    v_rabatt  INT;
+    v_rabatt  NUMERIC(5,2);
     v_result  TEXT;
 BEGIN
     SELECT name, rabatt_prozent

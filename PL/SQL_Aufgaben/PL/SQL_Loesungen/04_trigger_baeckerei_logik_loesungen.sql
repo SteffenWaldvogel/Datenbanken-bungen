@@ -125,7 +125,7 @@ EXECUTE FUNCTION trf_kunden_rabatt_validierung();
 /* =========================================================
    Aufgabe 5 – Auto-Bestellstatus bei leeren Positionen
    AFTER DELETE auf bestell_positionen:
-   Wenn keine Positionen mehr -> status = 'LEER'
+   Wenn keine Positionen mehr -> status = 'STORNIERT'
    ========================================================= */
 
 CREATE OR REPLACE FUNCTION trf_bestellung_leer_setzen()
@@ -142,7 +142,7 @@ BEGIN
 
     IF v_anzahl = 0 THEN
         UPDATE bestellungen
-        SET status = 'LEER'
+        SET status = 'STORNIERT'
         WHERE bestellung_id = OLD.bestellung_id;
     END IF;
 

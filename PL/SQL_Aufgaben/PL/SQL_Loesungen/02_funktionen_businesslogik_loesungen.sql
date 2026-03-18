@@ -61,7 +61,7 @@ BEGIN
     END IF;
 
     -- einfache String-Heuristik, case-insensitive
-    IF v_name ILIKE '%gmbh%' OR v_name ILIKE '%ag%' THEN
+    IF v_name ILIKE '%gmbh%' OR v_name ILIKE '% ag' OR v_name ILIKE '% ag %' THEN
         RETURN 'GESCHAEFT';
     ELSE
         RETURN 'PRIVAT';
@@ -169,7 +169,7 @@ AS $$
 DECLARE
     v_name   TEXT;
     v_typ    TEXT;
-    v_rabatt INT;
+    v_rabatt NUMERIC(5,2);
     v_result TEXT;
 BEGIN
     SELECT name, kunden_typ, rabatt_prozent

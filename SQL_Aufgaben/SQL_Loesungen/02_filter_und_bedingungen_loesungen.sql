@@ -28,7 +28,8 @@ WHERE kategorie_id IS NULL;
 -- Aufgabe 6
 SELECT *
 FROM kunden
-WHERE telefon NOT LIKE '%015%';
+WHERE telefon NOT LIKE '%015%'
+   OR telefon IS NULL;
 
 -- Aufgabe 7 (grob: „drei Wörter“ → 2 Leerzeichen)
 SELECT *

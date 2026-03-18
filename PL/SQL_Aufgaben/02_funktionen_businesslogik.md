@@ -40,7 +40,7 @@ Schreibe eine Funktion `fn_ist_verfuegbar(p_id INT, menge INT)`, die `BOOLEAN` z
 
 ## Aufgabe 4 – Umsatzklasse eines Kunden
 
-Schreibe eine Funktion `fn_umsatzklasse_kunde(k_id INT)`, die auf Basis des Gesam­tumsatzes (wie in Übung 01) eine Klasse zurückgibt:
+Schreibe eine Funktion `fn_umsatzklasse_kunde(k_id INT)`, die auf Basis des Gesamtumsatzes (wie in Übung 01) eine Klasse zurückgibt:
 
 - `< 100` → `'LOW'`
 - `100 – 499` → `'MID'`

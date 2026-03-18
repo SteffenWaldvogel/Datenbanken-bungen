@@ -30,7 +30,7 @@ View „backauftrag_detail_v“ über:
 - produkte
 
 ## Aufgabe 7  
-Schreibe eine Abfrage auf die View, um die teuerste Bestellung zu finden.
+Schreibe eine Abfrage auf die View `kunden_umsatz_v`, um den umsatzstärksten Kunden zu finden.
 
 ## Aufgabe 8  
 View, die alle Produkte ohne Bestellung enthält.

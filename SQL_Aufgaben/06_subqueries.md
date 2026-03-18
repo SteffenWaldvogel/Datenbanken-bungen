@@ -7,7 +7,7 @@ Zeige alle Produkte, die teurer sind als der durchschnittliche Produktpreis.
 Zeige alle Kunden, die mehr Bestellungen haben als der Durchschnitt.
 
 ## Aufgabe 3  
-Zeige alle Produkte, die in mehr als 2 Kategorien vorkommen (theoretisch).
+Zeige alle Produkte, die in mehr als 2 Rezepten vorkommen.
 
 ## Aufgabe 4  
 Produkte, die MIND. einmal geliefert wurden.

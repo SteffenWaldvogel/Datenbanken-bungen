@@ -187,20 +187,93 @@ $$;
    - ruft pr_bestellung_pruefen_und_markieren(NEW.bestellung_id)
    ========================================================= */
 
+-- Hinweis: Ein AFTER INSERT Trigger auf bestellungen kann die Positionen
+-- noch nicht prüfen, da diese erst nach der Bestellung eingefügt werden.
+-- Daher wird hier ein AFTER INSERT Trigger auf bestell_positionen verwendet,
+-- der die Prüfung bei jeder neuen Position auslöst.
+
 CREATE OR REPLACE FUNCTION trf_bestellung_auto_pruefen()
 RETURNS TRIGGER
 AS $$
 BEGIN
-    -- direkt nach dem Einfügen prüfen
-    CALL pr_bestellung_pruefen_und_markieren(NEW.bestellung_id);
+    -- Prüfung als Funktion aufrufen (PERFORM statt CALL für Trigger-Kompatibilität)
+    PERFORM pr_bestellung_pruefen_als_funktion(NEW.bestellung_id);
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TRIGGER IF EXISTS tr_bestellung_auto_pruefen ON bestellungen;
+-- Hilfsfunktion, da CALL in Triggern erst ab PG14 unterstützt wird
+CREATE OR REPLACE FUNCTION pr_bestellung_pruefen_als_funktion(p_bestellung_id INT)
+RETURNS void
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    v_ok          BOOLEAN;
+    v_anzahl_pos  INT;
+    v_gesamtwert  NUMERIC(12,2);
+    v_email       TEXT;
+    v_grund       TEXT;
+BEGIN
+    PERFORM 1
+    FROM bestellungen
+    WHERE bestellung_id = p_bestellung_id;
+
+    IF NOT FOUND THEN
+        RAISE NOTICE 'Bestellung % existiert nicht.', p_bestellung_id;
+        RETURN;
+    END IF;
+
+    SELECT COUNT(*) INTO v_anzahl_pos
+    FROM bestell_positionen
+    WHERE bestellung_id = p_bestellung_id;
+
+    IF v_anzahl_pos = 0 THEN
+        v_grund := 'Keine Positionen';
+    END IF;
+
+    SELECT COALESCE(SUM(bp.anzahl * bp.einzelpreis * (1 - bp.rabatt_prozent / 100.0)), 0.00)
+    INTO v_gesamtwert
+    FROM bestell_positionen bp
+    WHERE bp.bestellung_id = p_bestellung_id;
+
+    IF v_grund IS NULL AND v_gesamtwert < 5.00 THEN
+        v_grund := 'Warenwert < 5 EUR';
+    END IF;
+
+    SELECT k.email INTO v_email
+    FROM bestellungen b
+    JOIN kunden k ON b.kunde_id = k.kunde_id
+    WHERE b.bestellung_id = p_bestellung_id;
+
+    IF v_grund IS NULL THEN
+        IF NOT FOUND OR v_email IS NULL OR position('@' IN v_email) = 0 THEN
+            v_grund := 'Kunde ohne gültige Email';
+        END IF;
+    END IF;
+
+    v_ok := fn_bestellung_ok(p_bestellung_id);
+
+    IF v_ok THEN
+        UPDATE bestellungen SET geprueft = TRUE
+        WHERE bestellung_id = p_bestellung_id;
+    ELSE
+        UPDATE bestellungen SET geprueft = FALSE
+        WHERE bestellung_id = p_bestellung_id;
+
+        IF v_grund IS NULL THEN
+            v_grund := 'Unbekannter Grund';
+        END IF;
+
+        INSERT INTO bestellung_prueflog (bestellung_id, grund, zeitpunkt)
+        VALUES (p_bestellung_id, v_grund, NOW());
+    END IF;
+END;
+$$;
+
+DROP TRIGGER IF EXISTS tr_bestellung_auto_pruefen ON bestell_positionen;
 
 CREATE TRIGGER tr_bestellung_auto_pruefen
-AFTER INSERT ON bestellungen
+AFTER INSERT ON bestell_positionen
 FOR EACH ROW
 EXECUTE FUNCTION trf_bestellung_auto_pruefen();
 

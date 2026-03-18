@@ -126,10 +126,8 @@ kunde_produkt_mengen AS (
         bp.produkt_id,
         SUM(bp.anzahl) AS gesamtmenge
     FROM
-        bestellungen b,
-        bestell_positionen bp
-    WHERE
-        b.bestellung_id = bp.bestellung_id
+        bestellungen b
+    JOIN bestell_positionen bp ON b.bestellung_id = bp.bestellung_id
     GROUP BY
         b.kunde_id,
         bp.produkt_id
@@ -143,12 +141,35 @@ top_produkt_je_kunde AS (
         kunde_produkt_mengen kpm
     WHERE
         kpm.gesamtmenge = (
-            SELECT
-                MAX(kpm2.gesamtmenge)
-            FROM
-                kunde_produkt_mengen kpm2
-            WHERE
-                kpm2.kunde_id = kpm.kunde_id
+            SELECT MAX(kpm2.gesamtmenge)
+            FROM kunde_produkt_mengen kpm2
+            WHERE kpm2.kunde_id = kpm.kunde_id
+        )
+),
+-- Schritt 4: teuerstes Produkt je Kunde (nach Einzelpreis in Bestellungen)
+kunde_produkt_preis AS (
+    SELECT
+        b.kunde_id,
+        bp.produkt_id,
+        MAX(bp.einzelpreis) AS max_preis
+    FROM
+        bestellungen b
+    JOIN bestell_positionen bp ON b.bestellung_id = bp.bestellung_id
+    GROUP BY
+        b.kunde_id,
+        bp.produkt_id
+),
+teuerstes_produkt_je_kunde AS (
+    SELECT
+        kpp.kunde_id,
+        kpp.produkt_id
+    FROM
+        kunde_produkt_preis kpp
+    WHERE
+        kpp.max_preis = (
+            SELECT MAX(kpp2.max_preis)
+            FROM kunde_produkt_preis kpp2
+            WHERE kpp2.kunde_id = kpp.kunde_id
         )
 )
 SELECT
@@ -156,23 +177,26 @@ SELECT
     k.name,
     SUM(bw.bestellwert)                 AS gesamtumsatz,
     AVG(bw.bestellwert)                 AS durchschnittlicher_bestellwert,
-    tp.produkt_id,
-    p.name AS meistbestelltes_produkt
+    tp.produkt_id                       AS meistbestelltes_produkt_id,
+    p_top.name                          AS meistbestelltes_produkt,
+    tpk.produkt_id                      AS teuerstes_produkt_id,
+    p_teuer.name                        AS teuerstes_produkt
 FROM
-    kunden k,
-    bestellwerte bw
-LEFT JOIN top_produkt_je_kunde tp
-    ON bw.kunde_id = tp.kunde_id
-LEFT JOIN produkte p
-    ON tp.produkt_id = p.produkt_id
+    kunden k
+JOIN bestellwerte bw ON k.kunde_id = bw.kunde_id
+LEFT JOIN top_produkt_je_kunde tp ON k.kunde_id = tp.kunde_id
+LEFT JOIN produkte p_top ON tp.produkt_id = p_top.produkt_id
+LEFT JOIN teuerstes_produkt_je_kunde tpk ON k.kunde_id = tpk.kunde_id
+LEFT JOIN produkte p_teuer ON tpk.produkt_id = p_teuer.produkt_id
 WHERE
-    k.kunde_id = bw.kunde_id
-    AND k.kunden_typ = 'GESCHAEFT'
+    k.kunden_typ = 'GESCHAEFT'
 GROUP BY
     k.kunde_id,
     k.name,
     tp.produkt_id,
-    p.name
+    p_top.name,
+    tpk.produkt_id,
+    p_teuer.name
 ORDER BY
     gesamtumsatz DESC;
 
@@ -505,29 +529,31 @@ ORDER BY
 -- optionale Filter: Filiale, Zeitraum, Kundentyp
 -- -> typische Pattern: Parameter als NULL bedeutet "kein Filter"
 --------------------------------------------------
--- Annahme: Es gibt (z. B. im Tool / in der Anwendung)
--- Bind-Parameter :p_filiale_id, :p_startdatum, :p_enddatum, :p_kunden_typ
--- In pgAdmin könntest du Platzhalter durch konkrete Werte ersetzen.
+-- Beispiel mit konkreten Filterwerten.
+-- Setze einen Wert auf NULL, um den jeweiligen Filter zu deaktivieren.
 
+WITH filter AS (
+    SELECT
+        1::INT           AS p_filiale_id,     -- NULL = kein Filialfilter
+        '2025-01-01'::DATE AS p_startdatum,   -- NULL = kein Startdatum
+        '2025-12-31'::DATE AS p_enddatum,     -- NULL = kein Enddatum
+        NULL::TEXT         AS p_kunden_typ     -- NULL = alle Kundentypen
+)
 SELECT
     DATE_TRUNC('day', b.bestelldatum) AS tag,
     SUM(
         bp.anzahl * bp.einzelpreis * (1 - bp.rabatt_prozent / 100.0)
     ) AS tagesumsatz
 FROM
-    bestellungen b,
-    bestell_positionen bp,
-    kunden k
+    bestellungen b
+JOIN bestell_positionen bp ON b.bestellung_id = bp.bestellung_id
+JOIN kunden k ON b.kunde_id = k.kunde_id
+CROSS JOIN filter f
 WHERE
-    b.bestellung_id = bp.bestellung_id
-    AND b.kunde_id = k.kunde_id
-    -- optionaler Filialfilter:
-    AND ( :p_filiale_id IS NULL OR b.filiale_id = :p_filiale_id )
-    -- optionaler Zeitraumfilter:
-    AND ( :p_startdatum IS NULL OR b.bestelldatum >= :p_startdatum )
-    AND ( :p_enddatum   IS NULL OR b.bestelldatum <  :p_enddatum + INTERVAL '1 day' )
-    -- optionaler Kundentyp:
-    AND ( :p_kunden_typ IS NULL OR k.kunden_typ = :p_kunden_typ )
+    ( f.p_filiale_id IS NULL OR b.filiale_id = f.p_filiale_id )
+    AND ( f.p_startdatum IS NULL OR b.bestelldatum >= f.p_startdatum )
+    AND ( f.p_enddatum   IS NULL OR b.bestelldatum <  f.p_enddatum + INTERVAL '1 day' )
+    AND ( f.p_kunden_typ IS NULL OR k.kunden_typ = f.p_kunden_typ )
 GROUP BY
     DATE_TRUNC('day', b.bestelldatum)
 ORDER BY

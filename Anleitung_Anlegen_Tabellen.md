@@ -1,6 +1,6 @@
 # 📘 Anleitung: Tabellen und Daten in PostgreSQL anlegen
 
-Diese kurze Anleitung zeigt dir, **wie du das Query Tool öffnest** und dort die beiden SQL‑Skripte im Ordner "Skripte_Setups" ausführst:
+Diese kurze Anleitung zeigt dir, **wie du das Query Tool öffnest** und dort die beiden SQL‑Skripte im Ordner "Skript_Setups" ausführst:
 
 - `create_bakery_tables.sql` (Tabellen anlegen)
 - `insert_bakery_tables.sql` (Beispieldaten einfügen)
